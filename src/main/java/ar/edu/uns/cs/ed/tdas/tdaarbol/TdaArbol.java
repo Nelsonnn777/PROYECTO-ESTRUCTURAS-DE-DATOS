@@ -1,12 +1,12 @@
-package ar.edu.uns.cs.ed.tdas.tdaarbol;
+package main.java.ar.edu.uns.cs.ed.tdas.tdaarbol;
 
 import java.util.Iterator;
 
-import ar.edu.uns.cs.ed.tdas.Position;
-import ar.edu.uns.cs.ed.tdas.tdalista.PositionList;
-import ar.edu.uns.cs.ed.tdas.tdalista.TdaLista;
-import ar.edu.uns.cs.ed.tdas.excepciones.*;
-import ar.edu.uns.cs.ed.tdas.tdamapeo.HashMapeo;
+import main.java.ar.edu.uns.cs.ed.tdas.Position;
+import main.java.ar.edu.uns.cs.ed.tdas.tdalista.PositionList;
+import main.java.ar.edu.uns.cs.ed.tdas.tdalista.TdaLista;
+import main.java.ar.edu.uns.cs.ed.tdas.excepciones.*;
+import main.java.ar.edu.uns.cs.ed.tdas.tdamapeo.HashMapeo;
 public class TdaArbol<E> implements Tree<E> {
     private TNodo<E> raiz;
     private int cantidad;

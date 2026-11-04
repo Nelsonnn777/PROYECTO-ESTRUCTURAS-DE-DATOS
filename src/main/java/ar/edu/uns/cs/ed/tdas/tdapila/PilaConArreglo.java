@@ -1,5 +1,5 @@
-package ar.edu.uns.cs.ed.tdas.tdapila;
-import ar.edu.uns.cs.ed.tdas.excepciones.EmptyStackException;
+package main.java.ar.edu.uns.cs.ed.tdas.tdapila;
+import main.java.ar.edu.uns.cs.ed.tdas.excepciones.EmptyStackException;
 public class PilaConArreglo<E> implements Stack<E> {
     private int cantidad;
     private  static int capacidad = 1000;

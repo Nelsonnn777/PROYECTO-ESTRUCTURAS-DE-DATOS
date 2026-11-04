@@ -1,12 +1,12 @@
-package ar.edu.uns.cs.ed.tdas.tdamapeo;
+package main.java.ar.edu.uns.cs.ed.tdas.tdamapeo;
 
-import ar.edu.uns.cs.ed.tdas.Entry;
-import ar.edu.uns.cs.ed.*;
-import ar.edu.uns.cs.ed.tdas.tdalista.PositionList;
-import ar.edu.uns.cs.ed.tdas.tdalista.TdaLista;
-import ar.edu.uns.cs.ed.tdas.excepciones.*;
-import ar.edu.uns.cs.ed.tdas.Entrada;
-import ar.edu.uns.cs.ed.tdas.*;
+import main.java.ar.edu.uns.cs.ed.tdas.Entry;
+import main.java.ar.edu.uns.cs.ed.*;
+import main.java.ar.edu.uns.cs.ed.tdas.tdalista.PositionList;
+import main.java.ar.edu.uns.cs.ed.tdas.tdalista.TdaLista;
+import main.java.ar.edu.uns.cs.ed.tdas.excepciones.*;
+import main.java.ar.edu.uns.cs.ed.tdas.Entrada;
+import main.java.ar.edu.uns.cs.ed.tdas.*;
 
 import java.util.Iterator;
 

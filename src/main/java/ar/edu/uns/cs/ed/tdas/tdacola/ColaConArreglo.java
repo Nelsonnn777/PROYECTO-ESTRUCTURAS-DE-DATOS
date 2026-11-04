@@ -1,7 +1,7 @@
-package ar.edu.uns.cs.ed.tdas.tdacola;
+package main.java.ar.edu.uns.cs.ed.tdas.tdacola;
 
-import ar.edu.uns.cs.ed.tdas.excepciones.EmptyQueueException;
-import ar.edu.uns.cs.ed.tdas.excepciones.FullQueueException;
+import main.java.ar.edu.uns.cs.ed.tdas.excepciones.EmptyQueueException;
+import main.java.ar.edu.uns.cs.ed.tdas.excepciones.FullQueueException;
 
 public class ColaConArreglo<E> implements Queue <E>{
     private E[] elementos;

@@ -1,8 +1,8 @@
-package ar.edu.uns.cs.ed.tdas.tdaarbol;
+package main.java.ar.edu.uns.cs.ed.tdas.tdaarbol;
 
-import ar.edu.uns.cs.ed.tdas.Position;
-import ar.edu.uns.cs.ed.tdas.tdalista.PositionList;
-import ar.edu.uns.cs.ed.tdas.tdalista.TdaLista;
+import main.java.ar.edu.uns.cs.ed.tdas.Position;
+import main.java.ar.edu.uns.cs.ed.tdas.tdalista.PositionList;
+import main.java.ar.edu.uns.cs.ed.tdas.tdalista.TdaLista;
 public class TNodo<E> implements Position<E> {
     private E element;
     private TNodo<E> Padre;
