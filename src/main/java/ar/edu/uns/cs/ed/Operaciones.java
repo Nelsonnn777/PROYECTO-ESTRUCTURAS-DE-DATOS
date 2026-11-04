@@ -5,4 +5,10 @@ public class Operaciones {
     String detalle; // Detalle de la operación, como el id del argumento o el id del usuario. El texto de la operación se almacena en mayúsculas para mantener consistencia. Por ejemplo: "CREAR_DEBATE:" + idRaiz.trim()
     String id; // Identificador del argumento o de root en caso de ser el tema raíz. 
 
+
+public Operaciones( int op, String de, String i){
+    operacion = op;
+    detalle = de;
+    id = i;
+}
 }

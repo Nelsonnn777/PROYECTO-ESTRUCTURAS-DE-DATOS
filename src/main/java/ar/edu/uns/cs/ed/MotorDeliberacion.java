@@ -2,7 +2,14 @@ package main.java.ar.edu.uns.cs.ed;
 import main.java.ar.edu.uns.cs.ed.tdas.excepciones.*;
 
 import main.java.ar.edu.uns.cs.ed.tdas.excepciones.InvalidPositionException;
+import main.java.ar.edu.uns.cs.ed.tdas.tdaarbol.TdaArbol;
+import main.java.ar.edu.uns.cs.ed.tdas.tdadiccionario.TdaDiccionario;
 import main.java.ar.edu.uns.cs.ed.tdas.tdalista.PositionList;
+import main.java.ar.edu.uns.cs.ed.tdas.tdalista.TdaLista;
+import main.java.ar.edu.uns.cs.ed.tdas.tdamapeo.HashMapeo;
+
+import java.util.HashMap;
+
 import main.java.ar.edu.uns.cs.ed.tdas.Position;
 
 
@@ -19,7 +26,10 @@ public class MotorDeliberacion {
     /**
      * Incluir los atributos necesarios para el desarrollo.
      */
-
+        private TdaArbol<Opinion> arbol;
+        private TdaDiccionario<String, Position<Opinion>> opinionesUsuario;
+        private PositionList<Operaciones> historial;
+        private HashMapeo<String, Position<Opinion>> opiniones;
     /**
      * Constructor de la clase MotorDeliveracion.
      * Inicializa el árbol de debate, y las estructuras correspondientes.  
@@ -27,6 +37,10 @@ public class MotorDeliberacion {
      */
     public MotorDeliberacion() {
     //TODO: Inicializar el árbol de debate y las estructuras correspondientes. 
+        debate = new TdaArbol<Opinion>();
+        opinionesUsuario = new TdaDiccionario<Integer, Position<Opinion>>();
+        historial = new TdaLista<Operaciones>();
+        opiniones = new HashMapeo<Integer, Position<Opinion>>();
     }
 
     /**
@@ -43,6 +57,9 @@ public class MotorDeliberacion {
      */
     public void registrarOperacion(int operacion, String detalle, String idArgumento) {
         //TODO: Implementar el registro de la operación en la estructura correspondiente.
+            Operaciones op = new Operaciones(operacion, detalle, idArgumento);
+            historial.addLast(op);
+        
     }
 
 /**
@@ -70,10 +87,28 @@ public class MotorDeliberacion {
  */
     public void crearDebate(String idRaiz, String texto, String idUsuario, String nombreUsuario) {
     //TODO: Implementar la creación del debate con el argumento raíz y el usuario correspondiente.
+        if(arbol.root() != null){throw new IllegalStateException("Ya hay un debate en curso");}
+
+        Usuario user = new Usuario(idUsuario, nombreUsuario);
+        Opinion root = new Opinion( idRaiz, texto, "ROOT", user );
+        arbol.createRoot(root);
+        // guardo el Position<Opinion> para guardarlo en opinionesUsuarios y en Opiniones
+        Position<Opinion> r = arbol.root();
+        opinionesUsuario.insert(idUsuario, r);
+        opiniones.put(idRaiz, r);
+        //guardo en el historial la Operacion 
+        registrarOperacion(1, "CREAR_DEBTATE" + idRaiz.trim(), idRaiz);
+    
     }
 
     public void Postear(Usuario usr, String idNuevo, String idPadre, String postura, String texto) {
         //TODO: Implementar la funcionalidad de postear un nuevo argumento en el debate.
+            Opinion post = new Opinion(idNuevo, texto, postura, usr);
+            Position<Opinion> padre = opiniones.get(idPadre);
+            Position<Opinion> pos = arbol.addLastChild(padre, post);
+            opinionesUsuario.insert(usr.getId(), pos);
+            opiniones.put(idNuevo, pos);
+            registrarOperacion(2, postura + idNuevo.trim(), idNuevo);
     }
     
 
@@ -125,7 +160,7 @@ public class MotorDeliberacion {
      * conectores tipo "├──" / "└──" para el nivel actual.
      */
     private void imprimirHijos(Position<Opinion> nodo, String prefijo) throws InvalidPositionException {
-        PositionList<Position<Opinion>> hijos = new ListaDoblementeEnlazada<Position<Opinion>>();
+        PositionList<Position<Opinion>> hijos = new TdaLista<Position<Opinion>>();
         for (Position<Opinion> hijo : arbol.children(nodo)) {
             hijos.addLast(hijo);
         }
