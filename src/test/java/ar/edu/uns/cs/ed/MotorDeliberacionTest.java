@@ -1,11 +1,11 @@
-package ar.edu.uns.cs.ed;
+package main.java.ar.edu.uns.cs.ed;
 
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-import ar.edu.uns.cs.ed.tdas.excepciones.EmptyStackException;
-import ar.edu.uns.cs.ed.tdas.tdalista.PositionList;
+import main.java.ar.edu.uns.cs.ed.tdas.excepciones.EmptyStackException;
+import main.java.ar.edu.uns.cs.ed.tdas.tdalista.PositionList;
 
 /**
  * Tests de MotorDeliberacion .

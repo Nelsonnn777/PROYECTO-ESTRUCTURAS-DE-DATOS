@@ -1,6 +1,6 @@
-package ar.edu.uns.cs.ed.tdas.tdagrafo;
+package main.java.ar.edu.uns.cs.ed.tdas.tdagrafo;
 
-import ar.edu.uns.cs.ed.tdas.Position;
+import main.java.ar.edu.uns.cs.ed.tdas.Position;
 
 /**
  * Interface Vertex

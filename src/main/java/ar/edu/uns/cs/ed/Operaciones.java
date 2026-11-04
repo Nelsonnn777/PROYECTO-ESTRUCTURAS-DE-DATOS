@@ -1,4 +1,4 @@
-package ar.edu.uns.cs.ed;
+package main.java.ar.edu.uns.cs.ed;
 
 public class Operaciones {
     int operacion; // 1: CREAR_DEBATE, 2: POSTEAR

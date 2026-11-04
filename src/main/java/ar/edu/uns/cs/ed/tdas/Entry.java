@@ -1,4 +1,4 @@
-package ar.edu.uns.cs.ed.tdas;
+package main.java.ar.edu.uns.cs.ed.tdas;
 
 /**
  * Interfaz Entry. 
