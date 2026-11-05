@@ -140,6 +140,11 @@ public class MotorDeliberacion {
 
     //consultar por usuario, devuelve una lista de argumentos que pertenecen a ese usuario.
     public PositionList<Opinion> consultarArgumentosPorUsuario(String idUsuario) {
+        PositionList<Opinion> toret = new TdaLista<Opinion>();
+        for(Entry<String,Position<Opinion>> e : opinionesUsuario.findAll(idUsuario)){
+            toret.addLast(e.getValue().element());
+        }
+        return toret;
     //TODO: Implementar la funcionalidad de consultar los argumentos de un usuario específico en el debate.
     }
 
