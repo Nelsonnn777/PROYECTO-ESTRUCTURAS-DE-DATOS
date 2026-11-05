@@ -33,9 +33,20 @@ public class PilaConArreglo<E> implements Stack<E> {
         }
         else throw new EmptyStackException("pila vacia");
     }
-    public void push(E el){
-        elementos[cantidad] = el;
+
+     public void push(E element){
+        E[] arrAux;
+        if(elementos.length == cantidad){
+            arrAux = (E[]) new Object[elementos.length*2];
+        } else {
+            arrAux = (E[]) new Object[elementos.length];
+        }
+        for (int i = 0; i < cantidad; i++) {
+            arrAux[i+1] = elementos[i];
+        }
+        arrAux[0] = element;
         cantidad++;
+        elementos = arrAux;
     }
     
 }
