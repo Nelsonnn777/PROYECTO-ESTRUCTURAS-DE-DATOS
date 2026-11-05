@@ -1,117 +1,132 @@
 package main.java.ar.edu.uns.cs.ed.tdas.tdamapeo;
-import main.java.ar.edu.uns.cs.ed.tdas.tdalista.PositionList;
-
-import main.java.ar.edu.uns.cs.ed.tdas.Position;
-import main.java.ar.edu.uns.cs.ed.tdas.tdalista.TdaLista;
-
-import main.java.ar.edu.uns.cs.ed.tdas.excepciones.InvalidKeyException;
-import java.util.Iterator;
-
-import main.java.ar.edu.uns.cs.ed.tdas.Entrada;
 import main.java.ar.edu.uns.cs.ed.tdas.Entry;
-public class HashMapeo<K,V> implements Map<K,V> {
-    private int N;
-    private PositionList<Entrada<K,V>> bucket[];
-    private int cant;
-
-    @SuppressWarnings("unchecked")
+import main.java.ar.edu.uns.cs.ed.tdas.Position;
+import main.java.ar.edu.uns.cs.ed.tdas.tdalista.*;
+import main.java.ar.edu.uns.cs.ed.tdas.tdadiccionario.Entrada;
+public class HashMapeo<K,V> implements Map<K,V>{
+    protected int cant;
+    protected PositionList<Entrada<K, V>> [] lista;
+    protected int buckets;
+    protected static final double limite = 0.7;
+    
     public HashMapeo(){
-        N = 10;
-        bucket = (PositionList<Entrada<K, V>>[]) new PositionList[N];
         cant = 0;
-
-        for(int i = 0; i < N; i++){
-            bucket[i] = new TdaLista<>();
-        }
+        buckets = 5;
+       lista = (TdaLista<Entrada<K, V>>[]) new Object[5];
     }
+
+    private int hash(K key){
+        return key.hashCode()%buckets;
+    }
+
+    private void reHash(){
+       buckets = nuevoPrimo(buckets);
+       PositionList<Entrada<K,V>>[] listaAux = (TdaLista<Entrada<K, V>>[]) new Object[buckets];
+        for (PositionList<Entrada<K,V>> l : lista) {
+            for (Entrada<K,V> entr : l) {
+                listaAux[hash(entr.getKey())].addLast(entr);
+            }
+        }
+        lista = listaAux;
+    }
+
+    private int nuevoPrimo(int n) {
+    int candidato = 2 * n + 1;
+    while (true) {
+        boolean esPrimo = true;
+        if (candidato % 2 == 0) {
+            esPrimo = false;
+        } else {
+            for (int i = 3; i * i <= candidato; i += 2) {
+                if (candidato % i == 0) {
+                    esPrimo = false;
+                    break;
+                }
+            }
+        }
+        if (esPrimo) {
+            return candidato;
+        }
+        candidato++;
+    }
+}
+
+
     public int size(){
         return cant;
     }
+
     public boolean isEmpty(){
         return cant == 0;
     }
-    private int Hash(K key){
-        return key.hashCode()%N;
-    }
-    public V get(K key) {
-        
-        if(key== null){ throw new InvalidKeyException("llave invalida");}
-        int hashkey = Hash(key);
-        Iterator<Entrada<K,V>> it = bucket[hashkey].iterator();
-        V valor = null;
-        boolean enc = false;
-        while(it.hasNext() ||(it.hasNext() && !enc)){
-            Entry<K,V> en = it.next();
-            enc = en.getKey().equals(key);
-            if(enc){
-                valor = en.getValue();
-            }
-        }
-        return valor;
 
+    public V put(K key, V value){
+        V toRet = null;
+        for (Entrada<K,V> entr : lista[hash(key)]) {
+            if (entr.getKey().equals(key)) { 
+                toRet = entr.getValue();
+                entr.setValue(value);
+                return toRet;
+            }
+        }
+        if ((double) (cant + 1) / buckets > limite) reHash();
+        lista[hash(key)].addLast (new Entrada<K,V>(key, value));
+        cant++;
+        return toRet;
     }
-    public V put(K key, V valor) throws InvalidKeyException{
-        if(key== null){ throw new InvalidKeyException("llave invalida");}
-        int hashkey = Hash(key);
-        V val = null;
-        boolean enc = false;
-        for (Position<Entrada<K,V>> en : bucket[hashkey].positions()) {
-            if(en.element().getKey().equals(key)){
-                val = en.element().getValue();
-                en.element().setValue(valor);
-                enc = true;
+
+    public V get(K key){
+        V toRet = null;
+        for (Entrada<K, V> entr : lista[hash(key)]) {
+            if (entr.getKey().equals(key)) {
+                toRet = entr.getValue();
                 break;
             }
         }
-        if(!enc){
-        Entrada<K,V> nuevo = new Entrada<K,V>(key,valor);
-            bucket[hashkey].addLast(nuevo);
-            cant++;
-        }
-        return val;
+        return toRet;
     }
-    
-    public Iterable<V> values(){
-        PositionList<V> valores= new TdaLista<V>();
-        for (PositionList<Entrada<K,V>> positionList : bucket) {
-            for (Entrada<K,V> entrada : positionList) {
-                valores.addLast(entrada.getValue());
-            }
-        }
-        return valores;
-    }
-    
-    public Iterable<K> keys(){
-        PositionList<K> llaves= new TdaLista<K>();
-        for (PositionList<Entrada<K,V>> positionList : bucket) {
-            for (Entrada<K,V> entrada : positionList) {
-                llaves.addLast(entrada.getKey());
-            }
-        }
-        return llaves;
-    }
-    
-    public Iterable<Entry<K,V>> entries(){
-        PositionList<Entry<K,V>> entradas= new TdaLista<Entry<K,V>>();
-        for (PositionList<Entrada<K,V>> positionList : bucket) {
-            for (Entrada<K,V> entrada : positionList) {
-                entradas.addLast(entrada);
-            }
-        }
-        return entradas;
-    }
+
     public V remove(K key){
-        if(key== null){ throw new InvalidKeyException("llave invalida");}
-        int hashkey = Hash(key);
-        V valor = null;
-        for (Position<Entrada<K,V>> entrada : bucket[hashkey].positions()) {
-            if(entrada.element().getKey().equals(key)){
-                valor = entrada.element().getValue();
-                bucket[hashkey].remove(entrada);
-                cant--;
+        V toRet = null;
+        for (Position<Entrada<K, V>> entr : lista[hash(key)].positions()) {
+            if (entr.element().getKey().equals(key)) {
+                toRet = entr.element().getValue();
+                lista[hash(key)].remove(entr);
+                cant --;
                 break;
             }
         }
-        return valor;
+        return toRet;
     }
+
+    public Iterable<K> keys(){
+        PositionList<K> listaRet = new TdaLista<>();
+        for (int i = 0; i < lista.length; i++) {
+            for (Entrada<K, V> entr : lista[i]) {
+                listaRet.addLast(entr.getKey());
+            }
+        }
+        return listaRet;
+    }
+
+    public  Iterable<V> values(){
+        PositionList<V> listaRet = new TdaLista<>();
+        for (int i = 0; i < lista.length; i++) {
+            for (Entrada<K, V> entr : lista[i]) {
+                listaRet.addLast(entr.getValue());
+            }
+        }
+        return listaRet;
+    }
+
+    public Iterable<Entry<K, V>> entries(){
+        PositionList<Entry<K, V>> listRet = new TdaLista<>();
+        for (int i = 0; i < lista.length; i++) {
+            for (Entry<K,V> entry : lista[i]) {
+                listRet.addLast(entry);
+            }
+        }
+        return listRet;
+    }
+
 }

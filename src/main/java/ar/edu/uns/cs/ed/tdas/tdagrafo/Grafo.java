@@ -2,11 +2,12 @@ package main.java.ar.edu.uns.cs.ed.tdas.tdagrafo;
 
 import main.java.ar.edu.uns.cs.ed.tdas.tdalista.PositionList;
 import main.java.ar.edu.uns.cs.ed.tdas.tdalista.TdaLista;
-import main.java.ar.edu.uns.cs.ed.tdas.tdamapeo.HashMapeo;
 import main.java.ar.edu.uns.cs.ed.tdas.Position;
 import main.java.ar.edu.uns.cs.ed.tdas.excepciones.InvalidEdgeException;
 import main.java.ar.edu.uns.cs.ed.tdas.excepciones.InvalidVertexException;
 import main.java.ar.edu.uns.cs.ed.tdas.excepciones.InvalidOperationException;
+import main.java.ar.edu.uns.cs.ed.tdas.tdamapeo.*;
+
 public class Grafo<V,E> implements Graph<V,E> {
     
     private PositionList<Vertice<V,E>> lisvertices;
@@ -155,7 +156,7 @@ public class Grafo<V,E> implements Graph<V,E> {
     public boolean esConexo(){
         if(lisvertices.size() == 0){return true;}// o throw new InvalidOperationException("es una grafo vacio");}
         boolean ret = false;
-        HashMapeo<V,Boolean> map = new HashMapeo<>();
+        Map<V,Boolean> map = new HashMapeo<>();
         for(Vertice<V,E> v: lisvertices){
             map.put(v.element(), false);
         }

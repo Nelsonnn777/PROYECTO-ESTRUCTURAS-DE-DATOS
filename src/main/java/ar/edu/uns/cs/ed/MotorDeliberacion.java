@@ -1,14 +1,11 @@
 package main.java.ar.edu.uns.cs.ed;
 import main.java.ar.edu.uns.cs.ed.tdas.excepciones.*;
-
-import main.java.ar.edu.uns.cs.ed.tdas.excepciones.InvalidPositionException;
+import main.java.ar.edu.uns.cs.ed.tdas.excepciones.*;
 import main.java.ar.edu.uns.cs.ed.tdas.tdaarbol.TdaArbol;
 import main.java.ar.edu.uns.cs.ed.tdas.tdadiccionario.TdaDiccionario;
 import main.java.ar.edu.uns.cs.ed.tdas.tdalista.PositionList;
 import main.java.ar.edu.uns.cs.ed.tdas.tdalista.TdaLista;
-import main.java.ar.edu.uns.cs.ed.tdas.tdamapeo.HashMapeo;
-
-import java.util.HashMap;
+import main.java.ar.edu.uns.cs.ed.tdas.tdamapeo.*;
 
 import main.java.ar.edu.uns.cs.ed.tdas.Position;
 
@@ -37,10 +34,10 @@ public class MotorDeliberacion {
      */
     public MotorDeliberacion() {
     //TODO: Inicializar el árbol de debate y las estructuras correspondientes. 
-        debate = new TdaArbol<Opinion>();
-        opinionesUsuario = new TdaDiccionario<Integer, Position<Opinion>>();
+        arbol = new TdaArbol<Opinion>();
+        opinionesUsuario = new TdaDiccionario<String, Position<Opinion>>();
         historial = new TdaLista<Operaciones>();
-        opiniones = new HashMapeo<Integer, Position<Opinion>>();
+        opiniones = new HashMapeo<String, Position<Opinion>>();
     }
 
     /**
