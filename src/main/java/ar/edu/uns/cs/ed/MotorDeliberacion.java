@@ -57,6 +57,7 @@ public class MotorDeliberacion {
      */
     public void registrarOperacion(int operacion, String detalle, String idArgumento) {
         //TODO: Implementar el registro de la operación en la estructura correspondiente.
+            if (operacion < 1 && operacion > 2){throw new IllegalArgumentException("la operacion es nula");}
             Operaciones op = new Operaciones(operacion, detalle, idArgumento);
             historial.push(op);
     }
