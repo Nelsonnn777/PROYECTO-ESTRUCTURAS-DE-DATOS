@@ -1,12 +1,10 @@
 package main.java.ar.edu.uns.cs.ed;
 import main.java.ar.edu.uns.cs.ed.tdas.Entry;
 import main.java.ar.edu.uns.cs.ed.tdas.excepciones.*;
-import main.java.ar.edu.uns.cs.ed.tdas.tdaarbol.TdaArbol;
-import main.java.ar.edu.uns.cs.ed.tdas.tdadiccionario.TdaDiccionario;
-import main.java.ar.edu.uns.cs.ed.tdas.tdalista.PositionList;
-import main.java.ar.edu.uns.cs.ed.tdas.tdalista.TdaLista;
+import main.java.ar.edu.uns.cs.ed.tdas.tdaarbol.*;
+import main.java.ar.edu.uns.cs.ed.tdas.tdalista.*;
 import main.java.ar.edu.uns.cs.ed.tdas.tdamapeo.*;
-import main.java.ar.edu.uns.cs.ed.tdas.tdapila.PilaConArreglo;
+import main.java.ar.edu.uns.cs.ed.tdas.tdapila.*;
 import java.util.Stack;
 
 
@@ -26,10 +24,13 @@ public class MotorDeliberacion {
     /**
      * Incluir los atributos necesarios para el desarrollo.
      */
-        private TdaArbol<Opinion> arbol;
-        private TdaDiccionario<String, Position<Opinion>> opinionesUsuario;
+        private Tree<Opinion> arbol;
+        private Map<String, PositionList<Opinion>> opinionesUsuario;
         private Stack<Operaciones> historial;
-        private HashMapeo<String, Position<Opinion>> opiniones;
+        private Map<String, Position<Opinion>> opiniones; 
+
+        // POSIBLE SOLUCIÓN PARA EL MÉTODO ELIMINARPOSTEO: SE VA A AGREGAR UN MAP<STRING,POSITION<OPINION>> EL POSITION<OPINION> ES LA POSICIÓN DE LA OPINIÓN DENTRO DE LA LISTA DE OPINIONES DEL USUARIO
+        private Map<String, Position<Opinion>> posOpUsuario;
     /**
      * Constructor de la clase MotorDeliveracion.
      * Inicializa el árbol de debate, y las estructuras correspondientes.  
@@ -37,10 +38,12 @@ public class MotorDeliberacion {
      */
     public MotorDeliberacion() {
     //TODO: Inicializar el árbol de debate y las estructuras correspondientes. 
-        arbol = new TdaArbol<Opinion>();
-        opinionesUsuario = new TdaDiccionario<String, Position<Opinion>>();
-        historial = new Stack<Operaciones> ();
-        opiniones = new HashMapeo<String, Position<Opinion>>();
+        arbol = new TdaArbol<>();
+        opinionesUsuario = new HashMapeo<>();
+        historial = new Stack<> ();
+        opiniones = new HashMapeo<>();
+        // POSIBLE SOLUCIÓN PARA ELIMINARPOSTEO
+        posOpUsuario = new HashMapeo<>();
     }
 
     /**
@@ -94,8 +97,11 @@ public class MotorDeliberacion {
         arbol.createRoot(root);
         // guardo el Position<Opinion> para guardarlo en opinionesUsuarios y en Opiniones
         Position<Opinion> r = arbol.root();
-        opinionesUsuario.insert(idUsuario, r);
+        opinionesUsuario.put(idUsuario, new TdaLista<>());
+        opinionesUsuario.get(idUsuario).addLast(root);
         opiniones.put(idRaiz, r);
+        //POSIBLE SOLUCION PAR ELIMINARPOSTEO
+        posOpUsuario.put(idRaiz, opinionesUsuario.get(idUsuario).last());
         //guardo en el historial la Operacion 
         registrarOperacion(1, "CREAR_DEBTATE" + idRaiz.trim(), idRaiz);
     
@@ -106,8 +112,10 @@ public class MotorDeliberacion {
             Opinion post = new Opinion(idNuevo, texto, postura, usr);
             Position<Opinion> padre = opiniones.get(idPadre);
             Position<Opinion> pos = arbol.addLastChild(padre, post);
-            opinionesUsuario.insert(usr.getId(), pos);
+            opinionesUsuario.get(usr.getId()).addLast(post);
             opiniones.put(idNuevo, pos);
+            // POSIBLE OPERACIÓN PARA ELIMINARPOSTEO
+            posOpUsuario.put(idNuevo, opinionesUsuario.get(usr.getId()).last());
             registrarOperacion(2, postura + idNuevo.trim(), idNuevo);
     }
     
@@ -117,16 +125,18 @@ public class MotorDeliberacion {
     //TODO: Implementar la funcionalidad de eliminar un posteo y todo su subárbol en el debate.
         Position<Opinion> nodo = opiniones.get(idPosteo);
         eliminarArbolInterno(nodo);
-
+        
     }
     private void eliminarArbolInterno(Position<Opinion> pos){
         for (Position<Opinion> posHijo : arbol.children(pos)){
             eliminarArbolInterno(posHijo);
         }
-        opiniones.remove(pos.element().getIdArgumento());
-        Entry<String,Position<Opinion>> opinionUsuario = opinionesUsuario.find(pos.element().getUsuario().getId());
-        opinionesUsuario.remove(opinionUsuario);
+       //CONSULTA: COMO REMOVER DE LA LISTA DE NODOS EN TIEMPO O(1)
+        opinionesUsuario.get(pos.element().getUsuario().getId()).remove(posOpUsuario.get(pos.element().getIdArgumento()));
+        posOpUsuario.remove(pos.element().getIdArgumento());
+        
         arbol.removeExternalNode(pos);
+        opiniones.remove(pos.element().getIdArgumento());
     }
 
     //obtiene las posiciones en postorden.
