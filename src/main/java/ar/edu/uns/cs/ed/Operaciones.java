@@ -11,4 +11,13 @@ public Operaciones( int op, String de, String i){
     detalle = de;
     id = i;
 }
+public String getDetalle() {
+    return detalle;
+}
+public String getId() {
+    return id;
+}
+public int getOperacion() {
+    return operacion;
+}
 }

@@ -5,6 +5,7 @@ import main.java.ar.edu.uns.cs.ed.tdas.tdaarbol.*;
 import main.java.ar.edu.uns.cs.ed.tdas.tdalista.*;
 import main.java.ar.edu.uns.cs.ed.tdas.tdamapeo.*;
 import main.java.ar.edu.uns.cs.ed.tdas.tdapila.*;
+import main.java.ar.edu.uns.cs.ed.tdas.tdadiccionario.*;
 import java.util.Stack;
 
 
@@ -151,12 +152,32 @@ public class MotorDeliberacion {
 
     //consultar por usuario, devuelve una lista de argumentos que pertenecen a ese usuario.
     public PositionList<Opinion> consultarArgumentosPorUsuario(String idUsuario) {
-        PositionList<Opinion> toret = new TdaLista<Opinion>();
-        for(Entry<String,Position<Opinion>> e : opinionesUsuario.findAll(idUsuario)){
-            toret.addLast(e.getValue().element());
-        }
+        PositionList<Opinion> toret= opinionesUsuario.get(idUsuario);
         return toret;
     //TODO: Implementar la funcionalidad de consultar los argumentos de un usuario específico en el debate.
+    }
+
+        /**
+     * Calcula la polarización de todos los nodos del debate.
+     * La polarización se define como la cantidad de argumentos a favor y en contra que existen en el subárbol que tiene como raíz cada nodo.
+     * @throws IllegalStateException si no hay un debate activo.
+     * @return Un diccionario cuya clave es el ID del nodo y el valor es un diccionario con la polarización: 
+     * "AFAVOR" y "ENCONTRA" y sus respectivos conteos.
+     */
+    public TdaDiccionario<String,TdaDiccionario<String,Integer>> calcularPolarizacionDebate(){
+        //TODO
+    }
+
+     /**
+    * Calcula la polarización de un nodo específico en el árbol de debate.
+    * La polarización se define como la cantidad de argumentos a favor y en contra que existen en el subárbol que tiene como raíz el nodo especificado por idNodo.
+    * @throws IllegalStateException si no hay un debate activo. 
+    * @param idNodo : Identificador del nodo para el cual se desea calcular la polarización.
+    * @return Un DiccionarioHashAbierto<String,Integer> que contiene la polarización del nodo, con las claves "AFAVOR" y "ENCONTRA" y sus respectivos conteos.
+    */
+    public TdaDiccionario<String,Integer> calcularPolarizacionNodo(String idNodo){
+        //TODO
+
     }
 
  /*** Mostrar árbol por consola ***/
