@@ -28,6 +28,7 @@ public class MotorDeliberacion {
         private Tree<Opinion> arbol;
         private Map<String, PositionList<Opinion>> opinionesUsuario;
         private Stack<Operaciones> historial;
+        // Guarda el nodo del arbol 
         private Map<String, Position<Opinion>> opiniones; 
 
         // POSIBLE SOLUCIÓN PARA EL MÉTODO ELIMINARPOSTEO: SE VA A AGREGAR UN MAP<STRING,POSITION<OPINION>> EL POSITION<OPINION> ES LA POSICIÓN DE LA OPINIÓN DENTRO DE LA LISTA DE OPINIONES DEL USUARIO
@@ -164,7 +165,7 @@ public class MotorDeliberacion {
      * @return Un diccionario cuya clave es el ID del nodo y el valor es un diccionario con la polarización: 
      * "AFAVOR" y "ENCONTRA" y sus respectivos conteos.
      */
-    public TdaDiccionario<String,TdaDiccionario<String,Integer>> calcularPolarizacionDebate(){
+    public Map<String,Map<String,Integer>> calcularPolarizacionDebate(){
         //TODO
     }
 
@@ -175,9 +176,39 @@ public class MotorDeliberacion {
     * @param idNodo : Identificador del nodo para el cual se desea calcular la polarización.
     * @return Un DiccionarioHashAbierto<String,Integer> que contiene la polarización del nodo, con las claves "AFAVOR" y "ENCONTRA" y sus respectivos conteos.
     */
-    public TdaDiccionario<String,Integer> calcularPolarizacionNodo(String idNodo){
+    public Map<String,Integer> calcularPolarizacionNodo(String idNodo){
         //TODO
-
+        if(arbol == null){throw new IllegalStateException("no hay debate en curso");}
+        HashMapeo<String,Integer> toret = new HashMapeo<String, Integer>();
+        toret.put("A FAVOR", 0);
+        toret.put("EN CONTRA", 0);
+        // recorridoCalcPolNodo(IdNodo, postura, toret,); SI ES QUE RESPETA EL CONTEXTO DE CADA NODO
+        recorridoCalcPolNodo(idNodo, toret);
+        return toret;
+    }
+    private void recorridoCalcPolNodo(String idNodo, String postura ,HashMapeo<String,Integer> map){
+        Position<Opinion> posop = opiniones.get(idNodo);
+        Opinion op = posop.element();
+        int c = map.get(op.getPostura()) +1;
+        map.put(op.getPostura(),  c);
+        if(arbol.isInternal(posop)){
+            for(Position<Opinion> p : arbol.children(posop)){
+                recorridoCalcPolNodo(p.element().getIdArgumento(), map);
+            }
+        }
+         
+    }
+    private void recorridoCalcPolNodo(String idNodo, HashMapeo<String,Integer> map){
+        Position<Opinion> posop = opiniones.get(idNodo);
+        Opinion op = posop.element();
+        int c = map.get(op.getPostura()) +1;
+        map.put(op.getPostura(),  c);
+        if(arbol.isInternal(posop)){
+            for(Position<Opinion> p : arbol.children(posop)){
+                recorridoCalcPolNodo(p.element().getIdArgumento(), map);
+            }
+        }
+         
     }
 
  /*** Mostrar árbol por consola ***/
