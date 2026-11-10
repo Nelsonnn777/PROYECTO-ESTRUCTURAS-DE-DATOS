@@ -228,14 +228,28 @@ public class MotorDeliberacion {
     public Map<String,Integer> calcularPolarizacionNodo(String idNodo){
         //TODO
         if(arbol == null){throw new IllegalStateException("no hay debate en curso");}
+        Opinion op = opiniones.get(idNodo).element();
         HashMapeo<String,Integer> toret = new HashMapeo<String, Integer>();
         toret.put("A FAVOR", 0);
         toret.put("EN CONTRA", 0);
-        // recorridoCalcPolNodo(IdNodo, postura, toret,); SI ES QUE RESPETA EL CONTEXTO DE CADA NODO
-        recorridoCalcPolNodo(idNodo, toret);
+        recorridoCalcPolNodo(idNodo, op.getPostura(), toret);
+        // recorridoCalcPolNodo(idNodo, toret); SI ES Q NO RESPETA EL CONTEXTO
         return toret;
     }
-    // private void recorridoCalcPolNodo(String idNodo, String postura ,HashMapeo<String,Integer> map){
+    private void recorridoCalcPolNodo(String idNodo, String postura ,HashMapeo<String,Integer> map){
+        Position<Opinion> posop = opiniones.get(idNodo);
+        Opinion op = posop.element();
+        int c = map.get(op.getPostura()) +1;
+        map.put(op.getPostura(),  c);
+        if(arbol.isInternal(posop)){
+            for(Position<Opinion> p : arbol.children(posop)){
+                recorridoCalcPolNodo(p.element().getIdArgumento(), postura, map);
+            }
+        }
+         
+    }
+    // SI ES Q NO RE SPETA EL CONTEXTO DE CADA NODO
+    // private void recorridoCalcPolNodo(String idNodo, HashMapeo<String,Integer> map){
     //     Position<Opinion> posop = opiniones.get(idNodo);
     //     Opinion op = posop.element();
     //     int c = map.get(op.getPostura()) +1;
@@ -247,18 +261,6 @@ public class MotorDeliberacion {
     //     }
          
     // }
-    private void recorridoCalcPolNodo(String idNodo, HashMapeo<String,Integer> map){
-        Position<Opinion> posop = opiniones.get(idNodo);
-        Opinion op = posop.element();
-        int c = map.get(op.getPostura()) +1;
-        map.put(op.getPostura(),  c);
-        if(arbol.isInternal(posop)){
-            for(Position<Opinion> p : arbol.children(posop)){
-                recorridoCalcPolNodo(p.element().getIdArgumento(), map);
-            }
-        }
-         
-    }
 
  /*** Mostrar árbol por consola ***/
  
