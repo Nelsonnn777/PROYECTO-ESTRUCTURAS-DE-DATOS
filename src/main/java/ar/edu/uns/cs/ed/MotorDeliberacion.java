@@ -6,6 +6,7 @@ import main.java.ar.edu.uns.cs.ed.tdas.tdalista.*;
 import main.java.ar.edu.uns.cs.ed.tdas.tdamapeo.*;
 import main.java.ar.edu.uns.cs.ed.tdas.tdapila.*;
 import main.java.ar.edu.uns.cs.ed.tdas.tdadiccionario.*;
+
 import java.util.Stack;
 
 
@@ -70,11 +71,37 @@ public class MotorDeliberacion {
 /**
  * Deshace la última operación registrada en el motor de deliveración.
  * La operación eliminar posteo no se puede deshacer, y si se intenta deshacer una operación cuando no hay operaciones registradas, se lanza una excepción.
- * @return
+ * @return 
  * @throws EmptyStackException
  */
+//RETURN INDEFINIDO. HAY QUE PREGUNTAR QUÉ RETORNA EL MÉTODO
     public String deshacerUltimaOperacion() throws EmptyStackException {
         //TODO: Implementar la funcionalidad de deshacer la última operación registrada.
+        if (historial.isEmpty()) {throw new EmptyStackException("No se realizaron operaciones previamente.");}
+        Operaciones ultOperacion;
+        Stack<Operaciones>  pilaAux = new Stack<>();
+        ultOperacion = historial.pop();
+        if (ultOperacion.getOperacion() != 1 || ultOperacion.getOperacion() != 2)
+            while (!historial.isEmpty()){
+                ultOperacion = historial.pop();
+                if (ultOperacion.getOperacion() == 1 || ultOperacion.getOperacion() == 2)
+                    break;
+                pilaAux.push(ultOperacion);
+            }
+        if (ultOperacion.getOperacion() == 1){
+            while (!historial.isEmpty()) {
+                historial.pop();
+            }
+            opinionesUsuario.remove(arbol.root().element().getUsuario().getId());              
+            opiniones.remove(arbol.root().element().getIdArgumento());
+            posOpUsuario.remove(arbol.root().element().getIdArgumento());
+            arbol.removeNode(arbol.root());
+        }  else {
+            Position<Opinion> opinion = opiniones.get(ultOperacion.getDetalle());
+            opiniones.remove(opinion.element().getIdArgumento());
+            opinionesUsuario.get(opinion.element().getUsuario().getId()).remove(posOpUsuario.get(opinion.element().getIdArgumento()));
+            arbol.removeExternalNode(opinion);
+        }
     }
 /**
  * Crea un nuevo debate con un argumento raíz.
@@ -144,11 +171,20 @@ public class MotorDeliberacion {
     //obtiene las posiciones en postorden.
     private void obtenerIdsYPosicionesSubarbol(Position<Opinion> nodo, PositionList<String> ids, PositionList<Position<Opinion>> posiciones) {
     //TODO: Implementar la funcionalidad de obtener los ids y posiciones de un subárbol en postorden.
+    for (Position<Opinion> pos : arbol.children(nodo)) {
+        obtenerIdsYPosicionesSubarbol(pos, ids, posiciones);
+    }
+    ids.addLast(nodo.element().getIdArgumento());
+    posiciones.addLast(nodo);
     }
 
     //limpia todo el debate, dejando la estructura vacía.   
     public void clearDebate() {
     //TODO: Implementar la funcionalidad de limpiar todo el debate, dejando la estructura vacía.
+    eliminarArbolInterno(arbol.root());
+    while (!historial.isEmpty())
+        historial.pop();
+
     }
 
     //consultar por usuario, devuelve una lista de argumentos que pertenecen a ese usuario.
@@ -167,6 +203,7 @@ public class MotorDeliberacion {
      */
     public Map<String,Map<String,Integer>> calcularPolarizacionDebate(){
         //TODO
+        
     }
 
      /**
