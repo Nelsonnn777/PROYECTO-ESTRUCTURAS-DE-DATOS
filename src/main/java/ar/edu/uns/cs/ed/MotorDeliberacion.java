@@ -203,8 +203,20 @@ public class MotorDeliberacion {
      */
     public Map<String,Map<String,Integer>> calcularPolarizacionDebate(){
         //TODO
-        
+        HashMapeo<String,Map<String,Integer>> toret = new HashMapeo<String, Map<String, Integer>>();
+        calPolDerec(arbol.root(), toret);
+        return toret;
     }
+
+    private void calPolDerec(Position<Opinion> nodo, Map<String,Map<String,Integer>> map){
+        String idar = nodo.element().getIdArgumento();
+        map.put(idar, calcularPolarizacionNodo(idar));
+        if(arbol.isInternal(nodo)){            
+            for(Position<Opinion> h : arbol.children(nodo)){
+                calPolDerec(h, map);
+            }
+        }
+     }
 
      /**
     * Calcula la polarización de un nodo específico en el árbol de debate.
@@ -223,18 +235,18 @@ public class MotorDeliberacion {
         recorridoCalcPolNodo(idNodo, toret);
         return toret;
     }
-    private void recorridoCalcPolNodo(String idNodo, String postura ,HashMapeo<String,Integer> map){
-        Position<Opinion> posop = opiniones.get(idNodo);
-        Opinion op = posop.element();
-        int c = map.get(op.getPostura()) +1;
-        map.put(op.getPostura(),  c);
-        if(arbol.isInternal(posop)){
-            for(Position<Opinion> p : arbol.children(posop)){
-                recorridoCalcPolNodo(p.element().getIdArgumento(), map);
-            }
-        }
+    // private void recorridoCalcPolNodo(String idNodo, String postura ,HashMapeo<String,Integer> map){
+    //     Position<Opinion> posop = opiniones.get(idNodo);
+    //     Opinion op = posop.element();
+    //     int c = map.get(op.getPostura()) +1;
+    //     map.put(op.getPostura(),  c);
+    //     if(arbol.isInternal(posop)){
+    //         for(Position<Opinion> p : arbol.children(posop)){
+    //             recorridoCalcPolNodo(p.element().getIdArgumento(), map);
+    //         }
+    //     }
          
-    }
+    // }
     private void recorridoCalcPolNodo(String idNodo, HashMapeo<String,Integer> map){
         Position<Opinion> posop = opiniones.get(idNodo);
         Opinion op = posop.element();
