@@ -88,6 +88,8 @@ public class MotorDeliberacion {
                     break;
                 pilaAux.push(ultOperacion);
             }
+//  CONSULTAR SI ESTE ES EL RETORNO
+        String toRet = ultOperacion.getDetalle();
         if (ultOperacion.getOperacion() == 1){
             while (!historial.isEmpty()) {
                 historial.pop();
@@ -102,6 +104,7 @@ public class MotorDeliberacion {
             opinionesUsuario.get(opinion.element().getUsuario().getId()).remove(posOpUsuario.get(opinion.element().getIdArgumento()));
             arbol.removeExternalNode(opinion);
         }
+        return toRet;
     }
 /**
  * Crea un nuevo debate con un argumento raíz.
@@ -145,7 +148,7 @@ public class MotorDeliberacion {
             opiniones.put(idNuevo, pos);
             // POSIBLE OPERACIÓN PARA ELIMINARPOSTEO
             posOpUsuario.put(idNuevo, opinionesUsuario.get(usr.getId()).last());
-            registrarOperacion(2, postura + idNuevo.trim(), idNuevo);
+            registrarOperacion(2, "POSTEAR" + idNuevo.trim(), idNuevo);
     }
     
 
@@ -154,7 +157,7 @@ public class MotorDeliberacion {
     //TODO: Implementar la funcionalidad de eliminar un posteo y todo su subárbol en el debate.
         Position<Opinion> nodo = opiniones.get(idPosteo);
         eliminarArbolInterno(nodo);
-        
+        historial.add(new Operaciones(3, "ELIMINAR_POSTEO" + nodo.element().getIdArgumento().trim(), idPosteo));
     }
     private void eliminarArbolInterno(Position<Opinion> pos){
         for (Position<Opinion> posHijo : arbol.children(pos)){
@@ -261,6 +264,21 @@ public class MotorDeliberacion {
     //     }
          
     // }
+
+
+    public void mostrarHistorial(){
+        Stack<Operaciones> pilaAux = new Stack<>();
+        Operaciones opAux;
+        while (!historial.isEmpty()){
+            opAux = historial.pop();
+            System.out.println(opAux.getDetalle());
+            pilaAux.push(opAux);
+        }
+        while (!pilaAux.isEmpty()) {
+            historial.push(pilaAux.pop());
+        }
+    }
+
 
  /*** Mostrar árbol por consola ***/
  
