@@ -45,7 +45,6 @@ public class MotorDeliberacion {
         opinionesUsuario = new HashMapeo<>();
         historial = new Stack<> ();
         opiniones = new HashMapeo<>();
-        // POSIBLE SOLUCIÓN PARA ELIMINARPOSTEO
         posOpUsuario = new HashMapeo<>();
     }
 
@@ -158,6 +157,7 @@ public class MotorDeliberacion {
         Position<Opinion> nodo = opiniones.get(idPosteo);
         eliminarArbolInterno(nodo);
         historial.add(new Operaciones(3, "ELIMINAR_POSTEO" + nodo.element().getIdArgumento().trim(), idPosteo));
+
     }
     private void eliminarArbolInterno(Position<Opinion> pos){
         for (Position<Opinion> posHijo : arbol.children(pos)){
@@ -184,9 +184,14 @@ public class MotorDeliberacion {
     //limpia todo el debate, dejando la estructura vacía.   
     public void clearDebate() {
     //TODO: Implementar la funcionalidad de limpiar todo el debate, dejando la estructura vacía.
-    eliminarArbolInterno(arbol.root());
-    while (!historial.isEmpty())
-        historial.pop();
+        
+    
+    
+    arbol = new TdaArbol<>();
+        opinionesUsuario = new HashMapeo<>();
+        historial = new Stack<> ();
+        opiniones = new HashMapeo<>();
+        posOpUsuario = new HashMapeo<>();
 
     }
 
@@ -206,7 +211,7 @@ public class MotorDeliberacion {
      */
     public Map<String,Map<String,Integer>> calcularPolarizacionDebate(){
         //TODO
-        HashMapeo<String,Map<String,Integer>> toret = new HashMapeo<String, Map<String, Integer>>();
+        Map<String,Map<String,Integer>> toret = new HashMapeo<String, Map<String, Integer>>();
         calPolDerec(arbol.root(), toret);
         return toret;
     }
@@ -233,8 +238,8 @@ public class MotorDeliberacion {
         if(arbol == null){throw new IllegalStateException("no hay debate en curso");}
         Opinion op = opiniones.get(idNodo).element();
         HashMapeo<String,Integer> toret = new HashMapeo<String, Integer>();
-        toret.put("A FAVOR", 0);
-        toret.put("EN CONTRA", 0);
+        toret.put("AFAVOR", 0);
+        toret.put("ENCONTRA", 0);
         recorridoCalcPolNodo(idNodo, op.getPostura(), toret);
         // recorridoCalcPolNodo(idNodo, toret); SI ES Q NO RESPETA EL CONTEXTO
         return toret;
