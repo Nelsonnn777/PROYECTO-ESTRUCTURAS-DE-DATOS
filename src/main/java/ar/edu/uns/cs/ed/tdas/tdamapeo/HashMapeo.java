@@ -3,25 +3,43 @@ import main.java.ar.edu.uns.cs.ed.tdas.Entry;
 import main.java.ar.edu.uns.cs.ed.tdas.Position;
 import main.java.ar.edu.uns.cs.ed.tdas.tdalista.*;
 import main.java.ar.edu.uns.cs.ed.tdas.tdadiccionario.Entrada;
-public class HashMapeo<K,V> implements Map<K,V>{
-    protected int cant;
-    protected PositionList<Entrada<K, V>> [] lista;
-    protected int buckets;
+public class HashMapeo<K,V> implements Map<K,V>{  
     protected static final double limite = 0.7;
-    
-    public HashMapeo(){
+    private static final int CAPACIDAD_POR_DEFECTO = 11;
+
+    protected int cant;
+    protected PositionList<Entrada<K, V>>[] lista;
+    protected int buckets;
+
+    @SuppressWarnings("unchecked")
+    public HashMapeo(int capacidad) {
         cant = 0;
-        buckets = 5;
-       lista = (TdaLista<Entrada<K, V>>[]) new Object[5];
+        buckets = capacidad;
+        // 1. Creamos el arreglo como Object[] para evitar el ClassCastException global
+        lista = (TdaLista<Entrada<K, V>>[]) new TdaLista[buckets];
+        
+        // 2. IMPORTANTE: Inicializamos cada posición con una instancia de tu lista (ej. TdaDinamica o la que usen)
+        for (int i = 0; i < buckets; i++) {
+            lista[i] = new TdaLista<>(); // O la implementación de lista que utilicen en la materia
+        }
+    }
+
+    public HashMapeo() {
+        this(CAPACIDAD_POR_DEFECTO);
     }
 
     private int hash(K key){
-        return key.hashCode()%buckets;
+        return Math.abs(key.hashCode()%buckets);
     }
 
     private void reHash(){
        buckets = nuevoPrimo(buckets);
-       PositionList<Entrada<K,V>>[] listaAux = (TdaLista<Entrada<K, V>>[]) new Object[buckets];
+       PositionList<Entrada<K,V>>[] listaAux = (TdaLista<Entrada<K, V>>[]) new TdaLista[buckets];
+
+       for (int i = 0; i < buckets; i++) {
+        listaAux[i] = new TdaLista<>();
+    } 
+
         for (PositionList<Entrada<K,V>> l : lista) {
             for (Entrada<K,V> entr : l) {
                 listaAux[hash(entr.getKey())].addLast(entr);
@@ -61,19 +79,26 @@ public class HashMapeo<K,V> implements Map<K,V>{
     }
 
     public V put(K key, V value){
-        V toRet = null;
-        for (Entrada<K,V> entr : lista[hash(key)]) {
-            if (entr.getKey().equals(key)) { 
-                toRet = entr.getValue();
-                entr.setValue(value);
-                return toRet;
-            }
+    if (key == null) throw new IllegalArgumentException("La clave no puede ser nula");
+
+    int h = hash(key);
+    for (Entrada<K,V> entr : lista[h]) {
+        if (entr.getKey().equals(key)) { 
+            V toRet = entr.getValue();
+            entr.setValue(value);
+            return toRet;
         }
-        if ((double) (cant + 1) / buckets > limite) reHash();
-        lista[hash(key)].addLast (new Entrada<K,V>(key, value));
-        cant++;
-        return toRet;
     }
+    
+    if ((double) (cant + 1) / buckets > limite) {
+        reHash();
+        h = hash(key);
+    }
+    
+    lista[h].addLast(new Entrada<K,V>(key, value));
+    cant++;
+    return null;
+}
 
     public V get(K key){
         V toRet = null;

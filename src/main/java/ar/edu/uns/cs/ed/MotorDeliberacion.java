@@ -121,7 +121,7 @@ public class MotorDeliberacion {
  */
     public void crearDebate(String idRaiz, String texto, String idUsuario, String nombreUsuario) {
     //TODO: Implementar la creación del debate con el argumento raíz y el usuario correspondiente.
-        if(arbol.root() != null){throw new IllegalStateException("Ya hay un debate en curso");}
+        if(!arbol.isEmpty()){throw new IllegalStateException("Ya hay un debate en curso");}
 
         Usuario user = new Usuario(idUsuario, nombreUsuario);
         Opinion root = new Opinion( idRaiz, texto, "ROOT", user );
@@ -138,12 +138,19 @@ public class MotorDeliberacion {
     
     }
 
+
+
+
+
+
     public void Postear(Usuario usr, String idNuevo, String idPadre, String postura, String texto) {
         //TODO: Implementar la funcionalidad de postear un nuevo argumento en el debate.
             Opinion post = new Opinion(idNuevo, texto, postura, usr);
             Position<Opinion> padre = opiniones.get(idPadre);
             Position<Opinion> pos = arbol.addLastChild(padre, post);
-            opinionesUsuario.get(usr.getId()).addLast(post);
+            PositionList<Opinion> lis = consultarArgumentosPorUsuario(usr.getId());
+            lis.addLast(post);
+            // opinionesUsuario.get(usr.getId()).addLast(post);
             opiniones.put(idNuevo, pos);
             // POSIBLE OPERACIÓN PARA ELIMINARPOSTEO
             posOpUsuario.put(idNuevo, opinionesUsuario.get(usr.getId()).last());
@@ -198,6 +205,11 @@ public class MotorDeliberacion {
     //consultar por usuario, devuelve una lista de argumentos que pertenecen a ese usuario.
     public PositionList<Opinion> consultarArgumentosPorUsuario(String idUsuario) {
         PositionList<Opinion> toret= opinionesUsuario.get(idUsuario);
+        if(toret == null){
+            PositionList<Opinion> nuevo = new TdaLista<>();
+            opinionesUsuario.put(idUsuario, nuevo);
+            toret = nuevo;
+        }
         return toret;
     //TODO: Implementar la funcionalidad de consultar los argumentos de un usuario específico en el debate.
     }
