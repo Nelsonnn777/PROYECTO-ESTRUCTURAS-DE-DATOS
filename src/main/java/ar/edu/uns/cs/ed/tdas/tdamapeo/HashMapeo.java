@@ -113,12 +113,14 @@ public class HashMapeo<K,V> implements Map<K,V>{
 
     public V remove(K key){
         V toRet = null;
-        for (Position<Entrada<K, V>> entr : lista[hash(key)].positions()) {
-            if (entr.element().getKey().equals(key)) {
-                toRet = entr.element().getValue();
-                lista[hash(key)].remove(entr);
-                cant --;
-                break;
+        if (!lista[hash(key)].isEmpty()){
+            for (Position<Entrada<K, V>> entr : lista[hash(key)].positions()) {
+                if (entr.element().getKey().equals(key)) {
+                    toRet = entr.element().getValue();
+                    lista[hash(key)].remove(entr);
+                    cant --;
+                    break;
+                }
             }
         }
         return toRet;

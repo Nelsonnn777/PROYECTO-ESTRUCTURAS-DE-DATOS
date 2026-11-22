@@ -62,7 +62,7 @@ public class MotorDeliberacion {
      */
     public void registrarOperacion(int operacion, String detalle, String idArgumento) {
         //TODO: Implementar el registro de la operación en la estructura correspondiente.
-            if (operacion < 1 && operacion > 2){throw new IllegalArgumentException("la operacion es nula");}
+            if (operacion < 1 || operacion > 2){throw new IllegalArgumentException("la operacion es nula");}
             Operaciones op = new Operaciones(operacion, detalle, idArgumento);
             historial.push(op);
     }
@@ -80,14 +80,14 @@ public class MotorDeliberacion {
         Operaciones ultOperacion;
         Stack<Operaciones>  pilaAux = new Stack<>();
         ultOperacion = historial.pop();
-        if (ultOperacion.getOperacion() != 1 || ultOperacion.getOperacion() != 2)
+        if (ultOperacion.getOperacion() != 1 && ultOperacion.getOperacion() != 2)
             while (!historial.isEmpty()){
                 ultOperacion = historial.pop();
                 if (ultOperacion.getOperacion() == 1 || ultOperacion.getOperacion() == 2)
                     break;
                 pilaAux.push(ultOperacion);
             }
-//  CONSULTAR SI ESTE ES EL RETORNO
+
         String toRet = ultOperacion.getDetalle();
         if (ultOperacion.getOperacion() == 1){
             while (!historial.isEmpty()) {
@@ -98,7 +98,7 @@ public class MotorDeliberacion {
             posOpUsuario.remove(arbol.root().element().getIdArgumento());
             arbol.removeNode(arbol.root());
         }  else {
-            Position<Opinion> opinion = opiniones.get(ultOperacion.getDetalle());
+            Position<Opinion> opinion = opiniones.get(ultOperacion.getId());
             opiniones.remove(opinion.element().getIdArgumento());
             opinionesUsuario.get(opinion.element().getUsuario().getId()).remove(posOpUsuario.get(opinion.element().getIdArgumento()));
             arbol.removeExternalNode(opinion);
@@ -122,7 +122,7 @@ public class MotorDeliberacion {
     public void crearDebate(String idRaiz, String texto, String idUsuario, String nombreUsuario) {
     //TODO: Implementar la creación del debate con el argumento raíz y el usuario correspondiente.
         if(!arbol.isEmpty()){throw new IllegalStateException("Ya hay un debate en curso");}
-
+        if (idRaiz.isBlank() || texto.isBlank() || idUsuario.isBlank() || nombreUsuario.isBlank()) { throw new IllegalArgumentException("Falta información para crear el debate.");}
         Usuario user = new Usuario(idUsuario, nombreUsuario);
         Opinion root = new Opinion( idRaiz, texto, "ROOT", user );
         arbol.createRoot(root);
@@ -141,12 +141,17 @@ public class MotorDeliberacion {
 
 
 
-
-
     public void Postear(Usuario usr, String idNuevo, String idPadre, String postura, String texto) {
         //TODO: Implementar la funcionalidad de postear un nuevo argumento en el debate.
-            Opinion post = new Opinion(idNuevo, texto, postura, usr);
+            if (arbol.isEmpty()) { throw new IllegalStateException("No hay un debate creado.");}
+            if (usr == null || idNuevo.isBlank() || idPadre.isBlank() || postura.isBlank() || texto.isBlank()){ throw new IllegalArgumentException("Falta indormación para crear el posteo.");}
+            
+            if (opiniones.get(idNuevo) != null){ throw new IllegalArgumentException("El id para el posteo nuevo ya está siendo ocupado.");}
+            String posturaLimpia = postura.trim().toUpperCase();
+            if (!posturaLimpia.equals("AFAVOR") && !posturaLimpia.equals("ENCONTRA")) {throw new IllegalArgumentException("La postura debe estar a favor o en contra.");}
+            Opinion post = new Opinion(idNuevo, texto, posturaLimpia, usr);
             Position<Opinion> padre = opiniones.get(idPadre);
+            if (padre == null) {throw new IllegalArgumentException("El padre no es válido.");}
             Position<Opinion> pos = arbol.addLastChild(padre, post);
             PositionList<Opinion> lis = consultarArgumentosPorUsuario(usr.getId());
             lis.addLast(post);
@@ -161,22 +166,37 @@ public class MotorDeliberacion {
     // Elimina un posteo y todo el subárbol.
     public void eliminarPosteo(String idUsuario, String idPosteo) {
     //TODO: Implementar la funcionalidad de eliminar un posteo y todo su subárbol en el debate.
+        
+        if (idUsuario == null || idUsuario.isBlank() || idPosteo == null || idPosteo.isBlank()){ throw new IllegalArgumentException("El usuario pasado es nulo.");}
         Position<Opinion> nodo = opiniones.get(idPosteo);
+        if (nodo == null){ throw new IllegalArgumentException("El posteo no existe.");}
+        if (!nodo.element().getUsuario().getId().equals(idUsuario)) { throw new IllegalStateException("El usuario no es el propietario del posteo.");}
+        
         eliminarArbolInterno(nodo);
-        historial.add(new Operaciones(3, "ELIMINAR_POSTEO" + nodo.element().getIdArgumento().trim(), idPosteo));
+        historial.push(new Operaciones(3, "ELIMINAR_POSTEO" + nodo.element().getIdArgumento().trim(), idPosteo));
 
     }
-    private void eliminarArbolInterno(Position<Opinion> pos){
-        for (Position<Opinion> posHijo : arbol.children(pos)){
+    private void eliminarArbolInterno(Position<Opinion> pos) {
+    if (arbol.isInternal(pos)) {
+
+        PositionList<Position<Opinion>> hijosCopia = new TdaLista<>();
+        for (Position<Opinion> posHijo : arbol.children(pos)) {
+            hijosCopia.addLast(posHijo);
+        }
+
+        for (Position<Opinion> posHijo : hijosCopia) {
             eliminarArbolInterno(posHijo);
         }
-       //CONSULTA: COMO REMOVER DE LA LISTA DE NODOS EN TIEMPO O(1)
-        opinionesUsuario.get(pos.element().getUsuario().getId()).remove(posOpUsuario.get(pos.element().getIdArgumento()));
-        posOpUsuario.remove(pos.element().getIdArgumento());
-        
-        arbol.removeExternalNode(pos);
-        opiniones.remove(pos.element().getIdArgumento());
     }
+
+    String idUser = pos.element().getUsuario().getId();
+    String idArg = pos.element().getIdArgumento();
+
+    opinionesUsuario.get(idUser).remove(posOpUsuario.get(idArg));
+    posOpUsuario.remove(idArg);
+    opiniones.remove(idArg);
+    arbol.removeExternalNode(pos);
+}
 
     //obtiene las posiciones en postorden.
     private void obtenerIdsYPosicionesSubarbol(Position<Opinion> nodo, PositionList<String> ids, PositionList<Position<Opinion>> posiciones) {
