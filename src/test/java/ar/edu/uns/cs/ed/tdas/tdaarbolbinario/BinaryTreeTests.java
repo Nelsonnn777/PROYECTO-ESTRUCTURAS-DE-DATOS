@@ -1,4 +1,4 @@
-package ar.edu.uns.cs.ed.tdas.tdaarbolbinario;
+package test.java.ar.edu.uns.cs.ed.tdas.tdaarbolbinario;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -11,8 +11,9 @@ import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
 
-import ar.edu.uns.cs.ed.tdas.excepciones.*;
-import ar.edu.uns.cs.ed.tdas.Position;
+import main.java.ar.edu.uns.cs.ed.tdas.excepciones.*;
+import main.java.ar.edu.uns.cs.ed.tdas.Position;
+import main.java.ar.edu.uns.cs.ed.tdas.tdaarbolbinario.*;
 
 /**
  * Tester desarrollado con JUnit 4 para la estructura BinaryTree.

@@ -1,9 +1,10 @@
-package ar.edu.uns.cs.ed.tdas.tdacola;
+package test.java.ar.edu.uns.cs.ed.tdas.tdacola;
 
-import ar.edu.uns.cs.ed.tdas.excepciones.EmptyQueueException;
+import main.java.ar.edu.uns.cs.ed.tdas.excepciones.EmptyQueueException;
 
 import static org.junit.Assert.*;
 import org.junit.*;
+import main.java.ar.edu.uns.cs.ed.tdas.tdacola.*;
 
 
 public class QueueTest {

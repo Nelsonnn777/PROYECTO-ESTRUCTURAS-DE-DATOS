@@ -1,11 +1,15 @@
-package ar.edu.uns.cs.ed.tdas.tdamapeo;
+package test.java.ar.edu.uns.cs.ed.tdas.tdamapeo;
 
-import ar.edu.uns.cs.ed.tdas.excepciones.*;
-import ar.edu.uns.cs.ed.tdas.Entry;
+import main.java.ar.edu.uns.cs.ed.tdas.excepciones.*;
+import main.java.ar.edu.uns.cs.ed.tdas.Entry;
+import main.java.ar.edu.uns.cs.ed.tdas.tdamapeo.*;
 
 import static org.junit.Assert.*;
 
-import java.util.*;
+import java.util.Vector;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 
 import org.junit.Assume;
 import org.junit.Before;

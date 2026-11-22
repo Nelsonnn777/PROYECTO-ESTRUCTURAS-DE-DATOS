@@ -1,7 +1,8 @@
-package ar.edu.uns.cs.ed.tdas.tdacolaconprioridad;
+package test.java.ar.edu.uns.cs.ed.tdas.tdacolaconprioridad;
 
-import ar.edu.uns.cs.ed.tdas.excepciones.*;
-import ar.edu.uns.cs.ed.tdas.Entry;
+import main.java.ar.edu.uns.cs.ed.tdas.excepciones.*;
+import main.java.ar.edu.uns.cs.ed.tdas.Entry;
+import main.java.ar.edu.uns.cs.ed.tdas.tdacolaconprioridad.*;
 
 import static org.junit.Assert.*;
 

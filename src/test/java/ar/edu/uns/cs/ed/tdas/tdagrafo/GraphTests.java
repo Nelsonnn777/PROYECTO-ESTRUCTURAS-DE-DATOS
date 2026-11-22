@@ -1,4 +1,4 @@
-package ar.edu.uns.cs.ed.tdas.tdagrafo;
+package test.java.ar.edu.uns.cs.ed.tdas.tdagrafo;
 
 // Librerías JUNIT
 import static org.junit.Assert.*;
@@ -10,7 +10,8 @@ import org.junit.Test;
 // Estructura a testear
 import java.util.Iterator;
 
-import ar.edu.uns.cs.ed.tdas.excepciones.*;
+import main.java.ar.edu.uns.cs.ed.tdas.excepciones.*;
+import main.java.ar.edu.uns.cs.ed.tdas.tdagrafo.*;
 
 
 /**

@@ -1,4 +1,4 @@
-package ar.edu.uns.cs.ed.tdas.tdacolaconprioridad;
+package test.java.ar.edu.uns.cs.ed.tdas.tdacolaconprioridad;
 
 public class Comparador<E extends Comparable<E>> implements java.util.Comparator<E> {
 

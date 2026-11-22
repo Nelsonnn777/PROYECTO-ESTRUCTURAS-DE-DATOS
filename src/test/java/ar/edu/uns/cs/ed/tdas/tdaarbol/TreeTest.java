@@ -1,5 +1,5 @@
 
-package ar.edu.uns.cs.ed.tdas.tdaarbol;
+package test.java.ar.edu.uns.cs.ed.tdas.tdaarbol;
 import static org.junit.Assert.*;
 
 
@@ -8,12 +8,13 @@ import java.util.Iterator;
 import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
-import ar.edu.uns.cs.ed.tdas.tdacola.Queue;
-import ar.edu.uns.cs.ed.tdas.tdalista.PositionList;
-import ar.edu.uns.cs.ed.tdas.Position;
-import ar.edu.uns.cs.ed.tdas.excepciones.*;
-import ar.edu.uns.cs.ed.tdas.tdacola.*;
-import ar.edu.uns.cs.ed.tdas.tdalista.*;
+import main.java.ar.edu.uns.cs.ed.tdas.tdacola.Queue;
+import main.java.ar.edu.uns.cs.ed.tdas.tdalista.PositionList;
+import main.java.ar.edu.uns.cs.ed.tdas.Position;
+import main.java.ar.edu.uns.cs.ed.tdas.excepciones.*;
+import main.java.ar.edu.uns.cs.ed.tdas.tdacola.*;
+import main.java.ar.edu.uns.cs.ed.tdas.tdalista.*;
+import main.java.ar.edu.uns.cs.ed.tdas.tdaarbol.*;
 
 
 public class TreeTest {

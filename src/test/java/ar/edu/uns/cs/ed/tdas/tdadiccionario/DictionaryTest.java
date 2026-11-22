@@ -1,7 +1,8 @@
-package ar.edu.uns.cs.ed.tdas.tdadiccionario;
+package test.java.ar.edu.uns.cs.ed.tdas.tdadiccionario;
 
-import ar.edu.uns.cs.ed.tdas.Entry;
-import ar.edu.uns.cs.ed.tdas.excepciones.*;
+import main.java.ar.edu.uns.cs.ed.tdas.Entry;
+import main.java.ar.edu.uns.cs.ed.tdas.excepciones.*;
+import main.java.ar.edu.uns.cs.ed.tdas.tdadiccionario.*;
 
 import static org.junit.Assert.*;
 

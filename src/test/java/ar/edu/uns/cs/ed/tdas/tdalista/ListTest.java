@@ -1,7 +1,8 @@
-package ar.edu.uns.cs.ed.tdas.tdalista;
+package test.java.ar.edu.uns.cs.ed.tdas.tdalista;
 
-import ar.edu.uns.cs.ed.tdas.excepciones.*;
-import ar.edu.uns.cs.ed.tdas.Position;
+import main.java.ar.edu.uns.cs.ed.tdas.excepciones.*;
+import main.java.ar.edu.uns.cs.ed.tdas.Position;
+import main.java.ar.edu.uns.cs.ed.tdas.tdalista.*;
 
 import static org.junit.Assert.*;
 import java.util.*;
