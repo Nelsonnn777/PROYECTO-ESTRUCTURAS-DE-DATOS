@@ -274,10 +274,13 @@ public class MotorDeliberacion {
     // }
     // SI ES Q NO RE SPETA EL CONTEXTO DE CADA NODO
     private void recorridoCalcPolNodo(String idNodo, Map<String,Integer> map){
+        if( arbol.isEmpty()){throw new IllegalStateException("no hay un debate");}
         Position<Opinion> posop = opiniones.get(idNodo);
+        if(posop == null){ throw new IllegalArgumentException("nodo no existente");}
         Opinion op = posop.element();
-        int c = map.get(op.getPostura()) +1;
-        map.put(op.getPostura(),  c);
+        if(op.getPostura()!= "ROOT"){
+            int c = map.get(op.getPostura()) +1;
+            map.put(op.getPostura(),  c);}
         if(arbol.isInternal(posop)){
             for(Position<Opinion> p : arbol.children(posop)){
                 recorridoCalcPolNodo(p.element().getIdArgumento(), map);
