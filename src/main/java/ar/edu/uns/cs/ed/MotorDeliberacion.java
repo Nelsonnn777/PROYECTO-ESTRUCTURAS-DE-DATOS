@@ -77,31 +77,39 @@ public class MotorDeliberacion {
     public String deshacerUltimaOperacion() throws EmptyStackException {
         //TODO: Implementar la funcionalidad de deshacer la última operación registrada.
         if (historial.isEmpty()) {throw new EmptyStackException("No se realizaron operaciones previamente.");}
-        Operaciones ultOperacion;
-        Stack<Operaciones>  pilaAux = new Stack<>();
-        ultOperacion = historial.pop();
-        if (ultOperacion.getOperacion() != 1 && ultOperacion.getOperacion() != 2)
-            while (!historial.isEmpty()){
-                ultOperacion = historial.pop();
-                if (ultOperacion.getOperacion() == 1 || ultOperacion.getOperacion() == 2)
-                    break;
-                pilaAux.push(ultOperacion);
-            }
+        Operaciones ultOperacion = historial.pop();
+        if(ultOperacion.getOperacion() == 3){throw new IllegalStateException("No se pudo deshacer la operación POSTEAR");}
+        // ESTO ERA POR SI HABIA QUE BUSCAR UNA OPERACION QUE SI SE PUEDA DESHACER
+        // Stack<Operaciones>  pilaAux = new Stack<>();
+        // ultOperacion = historial.pop();
+        // //verifica que la operacion no sea un eliminado o un elemento ya eliminado
+        // if (ultOperacion.getOperacion() == 3 || opiniones.get(ultOperacion.getId()) == null)
+        //     while (!historial.isEmpty()){
+        //         ultOperacion = historial.pop();
+        //         if (ultOperacion.getOperacion() == 1 || ultOperacion.getOperacion() == 2)
+        //             break;
+        //         pilaAux.push(ultOperacion);
+        //     }
 
         String toRet = ultOperacion.getDetalle();
         if (ultOperacion.getOperacion() == 1){
-            while (!historial.isEmpty()) {
-                historial.pop();
-            }
-            opinionesUsuario.remove(arbol.root().element().getUsuario().getId());              
-            opiniones.remove(arbol.root().element().getIdArgumento());
-            posOpUsuario.remove(arbol.root().element().getIdArgumento());
-            arbol.removeNode(arbol.root());
+            clearDebate();
+            // while (!historial.isEmpty()) {
+            //     historial.pop();
+            // }
+            // opinionesUsuario.remove(arbol.root().element().getUsuario().getId());              
+            // opiniones.remove(arbol.root().element().getIdArgumento());
+            // posOpUsuario.remove(arbol.root().element().getIdArgumento());
+            // arbol.removeNode(arbol.root());
         }  else {
             Position<Opinion> opinion = opiniones.get(ultOperacion.getId());
             opiniones.remove(opinion.element().getIdArgumento());
             opinionesUsuario.get(opinion.element().getUsuario().getId()).remove(posOpUsuario.get(opinion.element().getIdArgumento()));
             arbol.removeExternalNode(opinion);
+            // ESTO ERA POR SI HABIA QUE BUSCAR UNA OPERACION QUE SI SE PUEDA DESHACER
+            // while(!pilaAux.isEmpty()){
+            //     historial.push(pilaAux.pop());
+            // }
         }
         return toRet;
     }
@@ -224,6 +232,7 @@ public class MotorDeliberacion {
 
     //consultar por usuario, devuelve una lista de argumentos que pertenecen a ese usuario.
     public PositionList<Opinion> consultarArgumentosPorUsuario(String idUsuario) {
+        if(idUsuario.isBlank() || idUsuario == null){throw new IllegalArgumentException("id no valido");}
         PositionList<Opinion> toret= opinionesUsuario.get(idUsuario);
         if(toret == null){
             PositionList<Opinion> nuevo = new TdaLista<>();
